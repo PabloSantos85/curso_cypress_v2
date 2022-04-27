@@ -7,13 +7,17 @@ describe('Central de atendimento TAT', function(){
         cy.title().should('be.equal', 'Central de Atendimento ao Cliente TAT');
     });
 
-    it('preenche os campos obrigatórios e envia o formulário', function(){
+    it.only('preenche os campos obrigatórios e envia o formulário', function(){
         cy.get('#firstName').type('John');
         cy.get('#lastName').type('Lennon');
         cy.get('#email').type('comeTogether@gmail.com');
         cy.get('#open-text-area').type('come together, right now... Over Me!',{delay: 0});
         cy.get('.button').click();
-    //  cy.get('.success').should('be.visible');
+
+        cy.clock()
+        cy.get('.success').should('be.visible');
+        cy.tick(3000)
+        cy.get('.success').should('not.be.visible')
     });
 
     it('exibe mensagem de erro ao submeter o formulário com um email com formatação inválida', function(){
@@ -161,5 +165,13 @@ describe('Central de atendimento TAT', function(){
         .click()
         
       cy.contains('Talking About Testing').should('be.visible')
+    })
+
+    it('exibe a mensagem por 3 segundos', function(){
+      cy.clock();
+      cy.fillMandatoryFieldsAndSubmit()
+      cy.get('.success').should('be.visible')
+      cy.tick(3000)
+      cy.get('.success').should('not.be.visible')
     })
 })
